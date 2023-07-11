@@ -1,4 +1,5 @@
-const express = require("express")
+const express = require("express");
+const Contact = require("../Models/Contact");
 
 const router = express.Router();
 
@@ -18,8 +19,8 @@ router.get('/test', (req,res) =>{
 
 router.post('/add', async (req,res) =>{
     try {
-        const {email, name, phone} = req.body;
-        const newContact = ({email, name, phone});
+        const {name, email, phone} = req.body;
+        const newContact = new Contact({name, email, phone});
         await newContact.save();
         res.status(200).send({msg : "contact added successfully", newContact});
         
@@ -45,7 +46,7 @@ router.get ('/all', async (req,res) => {
 
 router.get ('/:id', async (req,res) =>{
     try {
-        const contactToGet = await contact.findOne({_id : req.params.id});
+        const contactToGet = await Contact.findOne({_id : req.params.id});
         res.status (200).send ({msg : "the contact is...", contactToGet});
     
     } catch (error) {
@@ -71,7 +72,7 @@ router.delete('/:_id', async (req,res) => {
 router.put('/:_id', async (req,res) =>{
     try {
         const {_id} = req.params;
-        const result = await Contact.updateOne({_id}, {$set : {... req.body}});
+        const result = await contact.updateOne({_id}, {$set : {... req.body}});
         res.status(200).send ({msg : " the contact is updated"})
     } catch (error) {
        res.status(400).send ({msg : "cannot update the contact", error}) 
